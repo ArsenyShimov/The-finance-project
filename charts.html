@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Графики финансов</title>
+    <link rel="stylesheet" href="charts.css">
+</head>
+<body>
+    <h1>Графики финансов</h1>
+
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="index.html" class="btn btn-primary">Вернуться к записям</a>
+    </div>
+
+    <div class="charts-container">
+        <div class="chart-container">
+            <h2>График доходов по категориям</h2>
+            <div id="incomeChart" style="width: 100%; height: 400px;"></div>
+        </div>
+
+        <div class="chart-container">
+            <h2>График расходов по категориям</h2>
+            <div class="period-selector">
+                <label>Период 1:</label>
+                <input type="date" id="startDate1">
+                <input type="date" id="endDate1">
+                <label>Период 2:</label>
+                <input type="date" id="startDate2">
+                <input type="date" id="endDate2">
+                <button class="btn btn-primary" id="updateExpenseChart">Обновить график</button>
+            </div>
+            <div id="expenseChart" style="width: 100%; height: 400px;"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
+    <script src="charts.js"></script>
+
+</body>
+</html>
