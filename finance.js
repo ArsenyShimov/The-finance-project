@@ -1,4 +1,4 @@
-//Класс для работы с IndexedDB
+//Класс для работы с IndexedDB 
 class DatabaseManager {
     constructor(dbName, storeNames) {
         this.dbName = dbName;

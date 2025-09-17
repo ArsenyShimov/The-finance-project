@@ -190,6 +190,6 @@ class ChartApp {
         });
     }
 }
-
+ 
 // Инициализация приложения
 document.addEventListener('DOMContentLoaded', () => new ChartApp());
