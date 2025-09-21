@@ -1,0 +1,295 @@
+:root { 
+    /* Цвета */   
+    --primary-color: #26a69a;
+    --primary-dark: #00796b;
+    --primary-light: #80cbc4;
+    --secondary-color: #2a3d45;
+    --background-dark: #1c2526;
+    --background-light: #2a3d45;
+    --surface-color: rgba(31, 41, 55, 0.9);
+    --surface-dark: #263238;
+    --surface-medium: #2e3b4e;
+    --surface-border: #37474f;
+    --text-primary: #e0e0e0;
+    --text-secondary: #26a69a;
+    
+    --gradient-primary: linear-gradient(to right, var(--primary-color), var(--primary-dark));
+    --gradient-background: linear-gradient(135deg, var(--background-dark) 0%, var(--background-light) 100%);
+    --gradient-header: linear-gradient(to right, #00695c, #003d33);
+    
+    --shadow-small: 0 2px 5px rgba(0, 0, 0, 0.4);
+    --shadow-medium: 0 4px 15px rgba(0, 0, 0, 0.4);
+    --shadow-large: 0 5px 15px rgba(0, 0, 0, 0.5);
+    --shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.6);
+    
+    --border-radius: 15px;
+    --border-radius-small: 10px;
+    --border-radius-button: 25px;
+    --spacing-small: 10px;
+    --spacing-medium: 20px;
+    --spacing-large: 30px;
+    
+    --transition-fast: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* Цвета уведомлений */
+    --notification-success: #4caf50;
+    --notification-error: #f44336;
+    --notification-info: #2196f3;
+    --notification-warning: #ff9800;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: var(--spacing-medium);
+    background: var(--gradient-background);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+h1, h2 {
+    text-align: center;
+    color: var(--text-secondary);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    transition: transform var(--transition-fast);
+    margin: var(--spacing-medium) 0;
+}
+
+h1:hover, h2:hover {
+    transform: scale(1.05);
+}
+
+.container {
+    max-width: 1800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-medium);
+}
+
+.container-item {
+    flex: 1;
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
+    padding: var(--spacing-medium);
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: var(--spacing-medium);
+    background: var(--surface-dark);
+    border-radius: var(--border-radius-small);
+    overflow: hidden;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--surface-border);
+}
+
+th {
+    background: var(--gradient-header);
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: var(--surface-medium);
+}
+
+tr:hover {
+    background-color: var(--surface-border);
+}
+
+.btn {
+    padding: var(--spacing-small) var(--spacing-medium);
+    border: none;
+    border-radius: var(--border-radius-button);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all var(--transition-fast);
+    margin: 5px;
+    box-shadow: var(--shadow-small);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    color: var(--text-primary);
+}
+
+.btn-delete {
+    background: linear-gradient(to right, #d81b60, #b71c1c);
+    color: var(--text-primary);
+}
+
+.btn-edit {
+    background: linear-gradient(to right, #0288d1, #01579b);
+    color: var(--text-primary);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+label {
+    color: var(--text-secondary);
+    font-weight: bold;
+}
+
+input, select {
+    padding: var(--spacing-small);
+    border: 2px solid var(--surface-border);
+    border-radius: var(--border-radius-small);
+    font-size: 16px;
+    background: var(--surface-medium);
+    color: var(--text-primary);
+    transition: border-color var(--transition-fast);
+}
+
+input:focus, select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    animation: fadeIn var(--transition-fast);
+}
+
+.modal-content {
+    background: var(--surface-dark);
+    margin: 10% auto;
+    padding: var(--spacing-medium);
+    width: 90%;
+    max-width: 500px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-large);
+    position: relative;
+    animation: slideIn var(--transition-fast);
+}
+
+.close {
+    color: var(--primary-color);
+    float: right;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+}
+
+.close:hover {
+    color: var(--primary-light);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .container-item {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .container-item {
+        padding: var(--spacing-small);
+    }
+    
+    .btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+    
+    .modal-content {
+        width: 95%;
+    }
+}
+
+/* ===== УВЕДОМЛЕНИЯ ===== */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    z-index: 10000;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateX(100%);
+    transition: transform var(--transition-fast);
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* Анимация появления */
+.notification.show {
+    transform: translateX(0);
+}
+
+/* Цвета уведомлений */
+.notification-success {
+    background-color: var(--notification-success);
+}
+
+.notification-error {
+    background-color: var(--notification-error);
+}
+
+.notification-info {
+    background-color: var(--notification-info);
+}
+
+.notification-warning {
+    background-color: var(--notification-warning);
+}
+
+/* Адаптивность для уведомлений */
+@media (max-width: 600px) {
+    .notification {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        font-size: 13px;
+        padding: 12px 16px;
+    }
+}

@@ -1,101 +1,60 @@
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 20px;
-    background: linear-gradient(135deg, #1c2526 0%, #2a3d45 100%);
-    color: #e0e0e0;
-}
-
-h1, h2 {
-    text-align: center;
-    color: #26a69a;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease;
-}
-
-h1:hover, h2:hover {
-    transform: scale(1.05);
-}
+/* Импорт общих стилей */
+@import url('common.css');
+    
+/* Контейнер графиков */
 .charts-container {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    gap: var(--spacing-medium);
     max-width: 1800px;
     margin: 0 auto;
 }
+
+/* Контейнер отдельного графика */
 .chart-container {
     flex: 1;
-    padding: 20px;
-    background: rgba(31, 41, 55, 0.9);
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    padding: var(--spacing-medium);
+    background: var(--surface-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-medium);
 }
 
-.btn {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    margin: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
-}
-
-.btn-primary {
-    background: linear-gradient(to right, #26a69a, #00796b);
-    color: #e0e0e0;
-}
-
+/* Селектор периода */
 .period-selector {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-medium);
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: var(--spacing-small);
     flex-wrap: wrap;
 }
 
 .period-selector label {
-    color: #26a69a;
+    color: var(--text-secondary);
 }
 
 .period-selector input {
     max-width: 150px;
-    padding: 10px;
-    border: 2px solid #37474f;
-    border-radius: 10px;
+    padding: var(--spacing-small);
+    border: 2px solid var(--surface-border);
+    border-radius: var(--border-radius-small);
     font-size: 16px;
-    background: #2e3b4e;
-    color: #e0e0e0;
-    transition: border-color 0.3s;
+    background: var(--surface-medium);
+    color: var(--text-primary);
+    transition: border-color var(--transition-fast);
 }
 
 .period-selector input:focus {
-    border-color: #26a69a;
+    border-color: var(--primary-color);
     outline: none;
 }
 
-a.btn {
-    text-decoration: none;
-    display: inline-block;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
+/* Адаптивность для страницы графиков */
 @media (max-width: 900px) {
     .charts-container {
         flex-direction: column;
     }
-
+    
     .chart-container {
         width: 100%;
     }
@@ -103,11 +62,6 @@ a.btn {
 
 @media (max-width: 600px) {
     .chart-container {
-        padding: 10px;
+        padding: var(--spacing-small);
     }
-
-    .btn {
-        padding: 8px 15px;
-        font-size: 14px;
-    }
-} 
+}
