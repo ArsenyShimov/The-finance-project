@@ -240,8 +240,7 @@ input:focus, select:focus {
         width: 95%;
     }
 }
-
-/* ===== УВЕДОМЛЕНИЯ ===== */
+/* уведомления */
 .notification {
     position: fixed;
     top: 20px;

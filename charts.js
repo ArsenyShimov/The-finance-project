@@ -1,4 +1,3 @@
-// Класс для управления графиками с использованием Apache ECharts
 class ChartManager {    
     constructor(incomeChartId, expenseChartId) {
         this.incomeChartElement = document.getElementById(incomeChartId);
@@ -48,39 +47,40 @@ class ChartManager {
     }
 
     // Обновление графика расходов (столбчатая диаграмма)
-    updateExpenseChart(records1, records2) {
-        // Группируем данные по датам для каждого периода
+    updateExpenseChart(records) {
+        // Группируем данные по датам и категориям
         const groupByDate = (records) => {
             const grouped = {};
+            const categories = {};
             records.forEach(record => {
                 const date = record.date;
                 if (!grouped[date]) {
                     grouped[date] = 0;
+                    categories[date] = [];
                 }
                 grouped[date] += record.amount;
+                categories[date].push(record.category);
             });
-            return grouped;
+            return { grouped, categories };
         };
 
-        const dataByDate1 = groupByDate(records1);
-        const dataByDate2 = groupByDate(records2);
+        const { grouped: dataByDate, categories: categoriesByDate } = groupByDate(records);
 
         // Получаем все уникальные даты и сортируем их
-        const allDates = [...new Set([...Object.keys(dataByDate1), ...Object.keys(dataByDate2)])]
-            .sort((a, b) => new Date(a) - new Date(b));
+        const allDates = Object.keys(dataByDate).sort((a, b) => new Date(a) - new Date(b));
 
         // Форматируем даты для отображения
         const formattedDates = allDates.map(date => {
             const d = new Date(date);
-            return d.toLocaleDateString('ru-RU', { 
-                day: '2-digit', 
-                month: '2-digit' 
+            return d.toLocaleDateString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit'
             });
         });
 
-        // Подготавливаем данные для графиков
-        const data1 = allDates.map(date => dataByDate1[date] || 0);
-        const data2 = allDates.map(date => dataByDate2[date] || 0);
+        // Подготавливаем данные для графика
+        const data = allDates.map(date => dataByDate[date] || 0);
+        const categories = allDates.map(date => categoriesByDate[date] ? Array.from(new Set(categoriesByDate[date])).join(', ') : '');
 
         const option = {
             title: {
@@ -88,35 +88,33 @@ class ChartManager {
                 left: 'center',
                 textStyle: { color: '#e0e0e0', fontSize: 16 }
             },
-            tooltip: { 
-                trigger: 'axis', 
+            tooltip: {
+                trigger: 'axis',
                 axisPointer: { type: 'shadow' },
-                formatter: function(params) {
-                    let result = `Дата: ${params[0].axisValue}<br/>`;
-                    params.forEach(param => {
-                        result += `${param.seriesName}: ${param.value.toFixed(2)} руб.<br/>`;
-                    });
-                    return result;
+                formatter: (params) => {
+                    const idx = params[0].dataIndex;
+                    const date = params[0].axisValue;
+                    const value = params[0].value;
+                    const category = categories[idx];
+                    return `Дата: ${date}<br/>Сумма: ${value.toFixed(2)} руб.<br/>Категория: ${category}`;
                 }
             },
-            legend: { 
-                top: '8%', 
-                textStyle: { color: '#e0e0e0' },
-                data: ['Период 1', 'Период 2']
+            legend: {
+                show: false
             },
-            grid: { 
-                left: '8%', 
-                right: '4%', 
-                bottom: '8%', 
+            grid: {
+                left: '8%',
+                right: '4%',
+                bottom: '8%',
                 top: '15%',
-                containLabel: true 
+                containLabel: true
             },
             xAxis: {
                 type: 'value',
                 name: 'Сумма (руб.)',
                 nameLocation: 'middle',
                 nameGap: 30,
-                axisLabel: { 
+                axisLabel: {
                     color: '#e0e0e0',
                     formatter: '{value} руб.'
                 },
@@ -129,7 +127,7 @@ class ChartManager {
                 name: 'Даты',
                 nameLocation: 'middle',
                 nameGap: 50,
-                axisLabel: { 
+                axisLabel: {
                     color: '#e0e0e0',
                     interval: 0
                 },
@@ -137,21 +135,11 @@ class ChartManager {
             },
             series: [
                 {
-                    name: 'Период 1',
+                    name: 'Расходы',
                     type: 'bar',
-                    data: data1,
-                    itemStyle: { 
+                    data: data,
+                    itemStyle: {
                         color: '#26a69a',
-                        borderRadius: [0, 4, 4, 0]
-                    },
-                    barWidth: '30%'
-                },
-                {
-                    name: 'Период 2',
-                    type: 'bar',
-                    data: data2,
-                    itemStyle: { 
-                        color: '#0288d1',
                         borderRadius: [0, 4, 4, 0]
                     },
                     barWidth: '30%'
@@ -186,18 +174,12 @@ class ChartApp {
         const expenses = await this.dbManager.getAllRecords('expenses');
 
         this.chartManager.updateIncomeChart(incomes);
-        
-        // Устанавливаем периоды по умолчанию (последние 30 дней)
         const today = new Date();
         const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-        
         const startDate1 = thirtyDaysAgo.toISOString().split('T')[0];
         const endDate1 = today.toISOString().split('T')[0];
-        
-        // Устанавливаем значения в поля ввода
         document.getElementById('startDate1').value = startDate1;
         document.getElementById('endDate1').value = endDate1;
-        
         // Фильтруем данные для периода 1
         const filterByDate = (records, start, end) => {
             if (!start || !end) return records;
@@ -206,9 +188,8 @@ class ChartApp {
                 return recordDate >= new Date(start) && recordDate <= new Date(end);
             });
         };
-        
         const expenses1 = filterByDate(expenses, startDate1, endDate1);
-        this.chartManager.updateExpenseChart(expenses1, []); // Период 2 пустой по умолчанию
+        this.chartManager.updateExpenseChart(expenses1);
     }
 
     // Настройка обработчиков событий
@@ -216,9 +197,6 @@ class ChartApp {
         document.getElementById('updateExpenseChart').addEventListener('click', async () => {
             const startDate1 = document.getElementById('startDate1').value;
             const endDate1 = document.getElementById('endDate1').value;
-            const startDate2 = document.getElementById('startDate2').value;
-            const endDate2 = document.getElementById('endDate2').value;
-
             const expenses = await this.dbManager.getAllRecords('expenses');
             const filterByDate = (records, start, end) => {
                 if (!start || !end) return [];
@@ -227,17 +205,12 @@ class ChartApp {
                     return recordDate >= new Date(start) && recordDate <= new Date(end);
                 });
             };
-
             const expenses1 = filterByDate(expenses, startDate1, endDate1);
-            const expenses2 = filterByDate(expenses, startDate2, endDate2);
-            
-            // Показываем сообщение, если нет данных
-            if (expenses1.length === 0 && expenses2.length === 0) {
-                alert('Нет данных для выбранных периодов. Проверьте даты и убедитесь, что есть записи за эти периоды.');
+            if (expenses1.length === 0) {
+                alert('Нет данных для выбранного периода. Проверьте даты и убедитесь, что есть записи за этот период.');
                 return;
             }
-            
-            this.chartManager.updateExpenseChart(expenses1, expenses2);
+            this.chartManager.updateExpenseChart(expenses1);
         });
     }
 }
